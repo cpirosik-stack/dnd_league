@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Лига Приключенцев</title>
+    <style>
+      body {
+        background-color: #1a1a1a;
+        color: white;
+        font-family: Arial;
+        text-align: center;
+        padding: 50px;
+      }
+
+      button {
+        background-color: #ff6b35;
+        color: white;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #ff8c42;
+      }
+
+      button:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+      }
+
+      .form-box {
+        display: none;
+        background-color: #2a2a2a;
+        padding: 30px;
+        border-radius: 10px;
+        margin-top: 20px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .form-box.show {
+        display: block;
+      }
+
+      input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        box-sizing: border-box;
+        background-color: #333;
+        color: white;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .message {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .success {
+        background-color: #28a745;
+      }
+
+      .error {
+        background-color: #dc3545;
+      }
+
+      .screen {
+        display: none;
+      }
+
+      .screen.show {
+        display: block;
+      }
+
+      .character-card {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px auto;
+        max-width: 500px;
+      }
+
+      .character-info {
+        text-align: left;
+        padding: 10px;
+      }
+
+      .character-info p {
+        margin: 10px 0;
+        font-size: 18px;
+      }
+
+      .tabs {
+        margin: 20px 0;
+      }
+
+      .tab-button {
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #444;
+      }
+
+      .tab-button.active {
+        background-color: #ff6b35;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.show {
+        display: block;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+
+      .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .inventory-item {
+        background-color: #2a2a2a;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #ff6b35;
+      }
+
+      .inventory-item h3 {
+        margin: 0 0 10px 0;
+        color: #ff6b35;
+      }
+
+      .inventory-item p {
+        margin: 5px 0;
+        font-size: 14px;
+        text-align: left;
+      }
+
+      .rarity-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+
+      .rarity-common {
+        background-color: #808080;
+        color: white;
+      }
+
+      .rarity-uncommon {
+        background-color: #1eff00;
+        color: black;
+      }
+
+      .rarity-rare {
+        background-color: #0070dd;
+        color: white;
+      }
+
+      .rarity-veryrare {
+        background-color: #a335ee;
+        color: white;
+      }
+
+      .rarity-legendary {
+        background-color: #ff8000;
+        color: white;
+      }
+
+      .rarity-artifact {
+        background-color: #e6cc80;
+        color: black;
+      }
+
+      .rarity-none {
+        background-color: #666;
+        color: white;
+      }
+
+      .item-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      .item-actions button {
+        flex: 1;
+        padding: 8px;
+        font-size: 12px;
+        margin: 0;
+        min-width: 80px;
+      }
+
+      .add-item-form {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 500px;
+        margin: 20px auto;
+      }
+
+      .add-item-form input, .add-item-form select, .add-item-form textarea {
+        margin: 10px 0;
+      }
+
+      .empty-message {
+        color: #999;
+        font-size: 16px;
+        margin-top: 20px;
+      }
+
+      .slots-info {
+        background-color: #444;
+        padding: 8px;
+        border-radius: 5px;
+        margin: 10px 0;
+        font-weight: bold;
+      }
+
+      .slots-full {
+        background-color: #dc3545;
+      }
+
+      .completed-badge {
+        background-color: #28a745;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: inline-block;
+        margin-left: 10px;
+      }
+
+      .archived-badge {
+        background-color: #6c757d;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: inline-block;
+        margin-left: 10px;
+      }
+
+      .character-select {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px auto;
+        max-width: 800px;
+      }
+
+      .char-select-card {
+        background-color: #2a2a2a;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #ff6b35;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .char-select-card:hover {
+        background-color: #3a3a3a;
+      }
+
+      .char-select-card.active {
+        border-left-color: #28a745;
+        background-color: #1e4620;
+      }
+
+      .search-box {
+        max-width: 400px;
+        margin: 20px auto;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 20px auto;
+        max-width: 1000px;
+      }
+
+      .stat-card {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #ff6b35;
+      }
+
+      .stat-card h3 {
+        margin: 0 0 10px 0;
+        color: #ff6b35;
+        font-size: 16px;
+      }
+
+      .stat-card .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      .stat-card .stat-label {
+        font-size: 14px;
+        color: #999;
+        margin-top: 5px;
+      }
+
+      .date-badge {
+        background-color: #0070dd;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: inline-block;
+        margin-top: 10px;
+      }
+
+      /* АДМИН ПАНЕЛЬ */
+      .admin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .admin-card {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #ff6b35;
+        text-align: left;
+      }
+
+      .admin-card h3 {
+        margin-top: 0;
+        color: #ff6b35;
+      }
+
+      .admin-card p {
+        margin: 8px 0;
+        font-size: 14px;
+      }
+
+      .admin-card .actions {
+        display: flex;
+        gap: 5px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .admin-card .actions button {
+        flex: 1;
+        padding: 8px;
+        font-size: 12px;
+        margin: 0;
+        min-width: 70px;
+      }
+
+      .admin-table {
+        width: 100%;
+        max-width: 1200px;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background-color: #2a2a2a;
+      }
+
+      .admin-table th, .admin-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #444;
+        font-size: 14px;
+      }
+
+      .admin-table th {
+        background-color: #ff6b35;
+        color: white;
+      }
+
+      .admin-table tr:hover {
+        background-color: #3a3a3a;
+      }
+
+      .admin-table button {
+        padding: 5px 10px;
+        margin: 2px;
+        font-size: 12px;
+      }
+
+      .edit-field {
+        background-color: #1a1a1a;
+        padding: 15px;
+        border-radius: 3px;
+        margin: 15px 0;
+      }
+
+      .edit-field input, .edit-field select {
+        margin: 10px 0;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+      }
+
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: #2a2a2a;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 800px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .modal-close {
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #ff6b35;
+      }
+
+      .modal-close:hover {
+        color: #ff8c42;
+      }
+
+      .completed-adventures {
+        background-color: #1a1a1a;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        text-align: left;
+      }
+
+      .completed-adventures h5 {
+        margin: 0 0 10px 0;
+        color: #28a745;
+      }
+
+      .completed-adventures ul {
+        margin: 5px 0;
+        padding-left: 20px;
+      }
+
+      .section-divider {
+        border-top: 2px solid #444;
+        margin: 30px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ЭКРАН ВХОДА/РЕГИСТРАЦИИ -->
+    <div id="authScreen" class="screen show">
+      <h1>⚔️ Лига Приключенцев ⚔️</h1>
+      <button onclick="showLogin()">Войти</button>
+      <button onclick="showRegister()">Зарегистрироваться</button>
+
+      <div id="loginForm" class="form-box">
+        <h2>Вход</h2>
+        <input type="text" id="loginUsername" placeholder="Логин">
+        <input type="password" id="loginPassword" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+        <div id="loginMessage"></div>
+      </div>
+
+      <div id="registerForm" class="form-box">
+        <h2>Регистрация</h2>
+        <input type="text" id="registerUsername" placeholder="Логин">
+        <input type="password" id="registerPassword" placeholder="Пароль">
+        <button onclick="register()">Зарегистрироваться</button>
+        <div id="registerMessage"></div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН ВЫБОРА ПЕРСОНАЖА -->
+    <div id="characterSelectScreen" class="screen">
+      <h1>⚔️ Лига Приключенцев ⚔️</h1>
+      <h2>Привет, <span id="playerName"></span>!</h2>
+
+      <!-- СТАТИСТИКА -->
+      <div id="statsSection" class="stats-grid"></div>
+
+      <div id="charactersList"></div>
+
+      <button id="createCharButton" onclick="showCharacterForm()">➕ Создать персонажа</button>
+      <button id="adminButton" onclick="checkAdmin()" style="display: none;">⚙️ Админ-панель</button>
+      <button onclick="confirmLogout()">Выход</button>
+    </div>
+
+    <!-- ЭКРАН СОЗДАНИЯ/РЕДАКТИРОВАНИЯ ПЕРСОНАЖА -->
+    <div id="characterFormScreen" class="screen">
+      <h1>⚔️ Создание персонажа ⚔️</h1>
+      
+      <div class="form-box show" style="max-width: 600px;">
+        <label>Имя персонажа:</label>
+        <input type="text" id="charName" placeholder="Например: Арагорн" maxlength="20">
+        
+        <label>Класс:</label>
+        <input type="text" id="charClass" placeholder="Например: Воин, Маг, Разбойник">
+
+        <label>Подкласс:</label>
+        <input type="text" id="charSubclass" placeholder="Например: Берсеркер, Некромант">
+
+        <label>Раса:</label>
+        <input type="text" id="charRace" placeholder="Например: Человек, Эльф, Дворф">
+
+        <button onclick="saveCharacter()">💾 Сохранить персонажа</button>
+        <button onclick="backToCharacterSelect()">← Назад</button>
+        <div id="characterFormMessage"></div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН ПЕРСОНАЖА (ИНВЕНТАРЬ, ПРИКЛЮЧЕНИЯ И Т.Д.) -->
+    <div id="dashboardScreen" class="screen">
+      <h1>⚔️ Лига Приключенцев ⚔️</h1>
+
+      <!-- КАРТОЧКА ПЕРСОНАЖА -->
+      <div class="character-card">
+        <h2 id="dashCharName"></h2>
+        <div class="character-info">
+          <p>🏷️ Класс: <span id="dashCharClass"></span></p>
+          <p>🎭 Подкласс: <span id="dashCharSubclass"></span></p>
+          <p>🌍 Раса: <span id="dashCharRace"></span></p>
+          <p>💰 Золото: <span id="dashCharGold"></span></p>
+          <p>⭐ Уровень: <span id="dashCharLevel"></span></p>
+        </div>
+        
+        <div id="completedAdventuresList" class="completed-adventures"></div>
+      </div>
+
+      <!-- ВКЛАДКИ -->
+      <div class="tabs">
+        <button class="tab-button active" onclick="switchTab('inventory')">📦 Инвентарь</button>
+        <button class="tab-button" onclick="switchTab('playerAdventures')">🗺️ Приключения</button>
+        <button class="tab-button" onclick="switchTab('settings')">⚙️ Настройки</button>
+      </div>
+
+      <!-- ИНВЕНТАРЬ -->
+      <div id="inventory" class="tab-content show">
+        <h3>📦 Инвентарь</h3>
+        
+        <!-- Форма добавления предмета -->
+        <div class="add-item-form">
+          <h4>Добавить предмет</h4>
+          <input type="text" id="itemName" placeholder="Название предмета" maxlength="30">
+          <input type="text" id="itemDescription" placeholder="Описание (необязательно)" maxlength="100">
+          
+          <label>Редкость:</label>
+          <select id="itemRarity">
+            <option value="none">Нет редкости</option>
+            <option value="common">Обычный (Common)</option>
+            <option value="uncommon">Необычный (Uncommon)</option>
+            <option value="rare">Редкий (Rare)</option>
+            <option value="veryrare">Очень редкий (Very Rare)</option>
+            <option value="legendary">Легендарный (Legendary)</option>
+            <option value="artifact">Артефакт (Artifact)</option>
+          </select>
+
+          <button onclick="addItem()">➕ Добавить</button>
+          <div id="addItemMessage"></div>
+        </div>
+
+        <!-- Список предметов -->
+        <div id="inventoryList"></div>
+      </div>
+
+      <!-- ПРИКЛЮЧЕНИЯ -->
+      <div id="playerAdventures" class="tab-content">
+        <h3>🗺️ Приключения</h3>
+        <div id="playerAdventuresList"></div>
+      </div>
+
+      <!-- НАСТРОЙКИ -->
+      <div id="settings" class="tab-content">
+        <h3>⚙️ Настройки</h3>
+        <button onclick="editCharacter()">✏️ Редактировать персонажа</button>
+        <button onclick="deleteCharacter()">🗑️ Удалить персонажа</button>
+        <button onclick="backToCharacterSelect()">← К списку персонажей</button>
+        <button onclick="confirmLogout()">Выход</button>
+      </div>
+    </div>
+
+    <!-- АДМИН ПАНЕЛЬ -->
+    <div id="adminScreen" class="screen">
+      <h1>⚔️ Админ-панель ⚔️</h1>
+      
+      <div class="tabs">
+        <button class="tab-button active" onclick="switchAdminTab('adminUsers')">👥 Пользователи</button>
+        <button class="tab-button" onclick="switchAdminTab('adminAdventures')">🗺️ Приключения</button>
+        <button class="tab-button" onclick="switchAdminTab('adminCompleted')">✅ Сыгранные</button>
+        <button class="tab-button" onclick="switchAdminTab('adminArchived')">📦 Архив</button>
+      </div>
+
+      <!-- ПОЛЬЗОВАТЕЛИ -->
+      <div id="adminUsers" class="tab-content show">
+        <h2>Управление пользователями</h2>
+        <button onclick="fixOldUsers()" style="background-color: #28a745; margin-bottom: 20px;">🔧 Исправить старых пользователей</button>
+        
+        <!-- ПОИСК -->
+        <div class="search-box">
+          <input type="text" id="userSearch" placeholder="🔍 Поиск по имени персонажа..." oninput="searchUsers()">
+        </div>
+
+        <div id="usersList"></div>
+      </div>
+
+      <!-- АКТИВНЫЕ ПРИКЛЮЧЕНИЯ -->
+      <div id="adminAdventures" class="tab-content">
+        <h2>Активные приключения</h2>
+        
+        <div class="add-item-form">
+          <h3>Создать приключение</h3>
+          <input type="text" id="advName" placeholder="Название приключения">
+          <textarea id="advDescription" placeholder="Описание приключения"></textarea>
+          <input type="text" id="advReward" placeholder="Награда (например: 500 золота)">
+          <input type="number" id="advMaxPlayers" placeholder="Макс. участников (пусто = без лимита)" min="1">
+          <label>Дата проведения:</label>
+          <input type="datetime-local" id="advDate">
+          <button onclick="createAdventure()">➕ Создать</button>
+          <div id="createAdvMessage"></div>
+        </div>
+
+        <h3>Список приключений</h3>
+        <div id="adventuresList"></div>
+      </div>
+
+      <!-- СЫГРАННЫЕ ПРИКЛЮЧЕНИЯ -->
+      <div id="adminCompleted" class="tab-content">
+        <h2>Сыгранные приключения</h2>
+        <div id="completedAdventuresList"></div>
+      </div>
+
+      <!-- АРХИВ ПРИКЛЮЧЕНИЙ -->
+      <div id="adminArchived" class="tab-content">
+        <h2>Архив приключений</h2>
+        <div id="archivedAdventuresList"></div>
+      </div>
+
+      <button onclick="backToCharacterSelect()">← Назад</button>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ ПОЛЬЗОВАТЕЛЯ -->
+    <div id="editUserModal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="closeEditUserModal()">&times;</span>
+        <h2>Редактировать пользователя</h2>
+        
+        <div id="editUserContent"></div>
+      </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ ПРОСМОТРА ЗАПИСЕЙ НА ПРИКЛЮЧЕНИЕ -->
+    <div id="adventureRegistrationsModal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="closeAdventureRegistrationsModal()">&times;</span>
+        <h2>Записи на приключение</h2>
+        
+        <div id="adventureRegistrationsContent"></div>
+      </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ПРИКЛЮЧЕНИЯ -->
+    <div id="editAdventureModal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="closeEditAdventureModal()">&times;</span>
+        <h2>Редактировать приключение</h2>
+        
+        <div id="editAdventureContent"></div>
+      </div>
+    </div>
+
+    <script>
+      let currentCharacterId = null;
+      let unsavedChanges = false;
+
+      // Подтверждение выхода
+      window.addEventListener('beforeunload', function (e) {
+        if (unsavedChanges) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      });
+
+      function confirmLogout() {
+        if (confirm('Вы уверены, что хотите выйти?')) {
+          logout();
+        }
+      }
+
+      // ============ ФУНКЦИЯ ИСПРАВЛЕНИЯ СТАРЫХ ПОЛЬЗОВАТЕЛЕЙ ============
+      function fixOldUsers() {
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+        let fixed = 0;
+
+        Object.keys(users).forEach(username => {
+          const user = users[username];
+          
+          if (user.character && !user.characters) {
+            user.characters = [user.character];
+            delete user.character;
+            fixed++;
+          }
+
+          if (user.characters) {
+            user.characters.forEach(char => {
+              if (!char.id) {
+                char.id = 'char_' + Date.now() + '_' + Math.random();
+                fixed++;
+              }
+              if (!char.adventures) char.adventures = [];
+              if (!char.inventory) char.inventory = [];
+              if (!char.completedAdventures) char.completedAdventures = [];
+              delete char.hp;
+              delete char.quantity;
+            });
+          } else {
+            user.characters = [];
+          }
+          
+          delete user.email;
+          delete user.gold;
+          delete user.level;
+          delete user.isAdmin;
+        });
+
+        localStorage.setItem('users', JSON.stringify(users));
+        alert(`✅ Исправлено ${fixed} записей!`);
+        showAdminUsers();
+      }
+
+      // ============ ФУНКЦИИ ВХОДА/РЕГИСТРАЦИИ ============
+      function showLogin() {
+        document.getElementById('loginForm').classList.add('show');
+        document.getElementById('registerForm').classList.remove('show');
+      }
+
+      function showRegister() {
+        document.getElementById('registerForm').classList.add('show');
+        document.getElementById('loginForm').classList.remove('show');
+      }
+
+      function register() {
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+        const messageDiv = document.getElementById('registerMessage');
+
+        if (!username || !password) {
+          messageDiv.innerHTML = '<div class="message error">Заполните все поля!</div>';
+          return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+        if (users[username]) {
+          messageDiv.innerHTML = '<div class="message error">Этот логин уже существует!</div>';
+          return;
+        }
+
+        users[username] = {
+          password: password,
+          characters: []
+        };
+
+        localStorage.setItem('users', JSON.stringify(users));
+        messageDiv.innerHTML = '<div class="message success">✅ Аккаунт создан!</div>';
+
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerPassword').value = '';
+      }
+
+      function login() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const messageDiv = document.getElementById('loginMessage');
+
+        if (!username || !password) {
+          messageDiv.innerHTML = '<div class="message error">Заполните все поля!</div>';
+          return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+
+        if (!users[username] || users[username].password !== password) {
+          messageDiv.innerHTML = '<div class="message error">❌ Неправильный логин или пароль!</div>';
+          return;
+        }
+
+        localStorage.setItem('currentUser', username);
+        showCharacterSelect(username);
+      }
+
+      // ============ СТАТИСТИКА ============
+      function showStats() {
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+        const statsSection = document.getElementById('statsSection');
+
+        let richestChar = { name: '-', gold: 0, username: '' };
+        let strongestChar = { name: '-', level: 0, username: '' };
+        let mostActivePlayer = { username: '-', count: 0 };
+
+        const playerActivity = {};
+
+        Object.keys(users).forEach(username => {
+          const user = users[username];
+          if (user.characters) {
+            user.characters.forEach(char => {
+              // Самый богатый
+              if (char.gold > richestChar.gold) {
+                richestChar = { name: char.name, gold: char.gold, username: username };
+              }
+
+              // Самый сильный
+              if (char.level > strongestChar.level) {
+                strongestChar = { name: char.name, level: char.level, username: username };
+              }
+
+              // Активность игрока
+              const completedCount = (char.completedAdventures || []).length;
+              if (!playerActivity[username]) {
+                playerActivity[username] = 0;
+              }
+              playerActivity[username] += completedCount;
+            });
+          }
+        });
+
+        // Самый активный
+        Object.keys(playerActivity).forEach(username => {
+          if (playerActivity[username] > mostActivePlayer.count) {
+            mostActivePlayer = { username: username, count: playerActivity[username] };
+          }
+        });
+
+        let html = `
+          <div class="stat-card">
+            <h3>💰 Самый богатый персонаж</h3>
+            <div class="stat-value">${richestChar.name}</div>
+            <div class="stat-label">${richestChar.gold} золота (${richestChar.username})</div>
+          </div>
+
+          <div class="stat-card">
+            <h3>⭐ Самый сильный персонаж</h3>
+            <div class="stat-value">${strongestChar.name}</div>
+            <div class="stat-label">Уровень ${strongestChar.level} (${strongestChar.username})</div>
+          </div>
+
+          <div class="stat-card">
+            <h3>🎯 Самый активный игрок</h3>
+            <div class="stat-value">${mostActivePlayer.username}</div>
+            <div class="stat-label">${mostActivePlayer.count} сыгранных приключений</div>
+          </div>
+        `;
+
+        statsSection.innerHTML = html;
+      }
+
+      // ============ ФУНКЦИИ ВЫБОРА ПЕРСОНАЖА ============
+      function showCharacterSelect(username) {
+        document.getElementById('authScreen').classList.remove('show');
+        document.getElementById('characterFormScreen').classList.remove('show');
+        document.getElementById('dashboardScreen').classList.remove('show');
+        document.getElementById('adminScreen').classList.remove('show');
+        
+        document.getElementById('characterSelectScreen').classList.add('show');
+
+        if (username === 'admin') {
+          document.getElementById('adminButton').style.display = 'inline-block';
+        } else {
+          document.getElementById('adminButton').style.display = 'none';
+        }
+
+        const users = JSON.parse(localStorage.getItem('users'));
+        const user = users[username];
+
+        document.getElementById('playerName').textContent = username;
+
+        // Показываем статистику
+        showStats();
+
+        const charactersList = document.getElementById('charactersList');
+        const characters = user.characters || [];
+
+        if (characters.length === 0) {
+          charactersList.innerHTML = '<p class="empty-message">❌ У вас нет персонажей</p>';
+        } else {
+          let html = '<div class="character-select">';
+          
+          characters.forEach(char => {
+            html += `
+              <div class="char-select-card" onclick="selectCharacter('${char.id}')">
+                <h3>${char.name}</h3>
+                <p>${char.class} (${char.subclass})</p>
+                <p>${char.race}</p>
+                <p>⭐ Уровень ${char.level}</p>
+                <p>💰 ${char.gold} золота</p>
+              </div>
+            `;
+          });
+
+          html += '</div>';
+          charactersList.innerHTML = html;
+        }
+
+        if (characters.length >= 3) {
+          document.getElementById('createCharButton').style.display = 'none';
+        } else {
+          document.getElementById('createCharButton').style.display = 'inline-block';
+        }
+      }
+
+      function selectCharacter(charId) {
+        currentCharacterId = charId;
+        openDashboard();
+      }
+
+      function showCharacterForm() {
+        document.getElementById('authScreen').classList.remove('show');
+        document.getElementById('characterSelectScreen').classList.remove('show');
+        document.getElementById('dashboardScreen').classList.remove('show');
+        document.getElementById('adminScreen').classList.remove('show');
+        
+        document.getElementById('characterFormScreen').classList.add('show');
+
+        if (currentCharacterId) {
+          const currentUser = localStorage.getItem('currentUser');
+          const users = JSON.parse(localStorage.getItem('users'));
+          const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+
+          if (character) {
+            document.getElementById('charName').value = character.name;
+            document.getElementById('charClass').value = character.class;
+            document.getElementById('charSubclass').value = character.subclass;
+            document.getElementById('charRace').value = character.race;
+          }
+        } else {
+          document.getElementById('charName').value = '';
+          document.getElementById('charClass').value = '';
+          document.getElementById('charSubclass').value = '';
+          document.getElementById('charRace').value = '';
+        }
+      }
+
+      function saveCharacter() {
+        const name = document.getElementById('charName').value;
+        const charClass = document.getElementById('charClass').value;
+        const subclass = document.getElementById('charSubclass').value;
+        const race = document.getElementById('charRace').value;
+        const messageDiv = document.getElementById('characterFormMessage');
+
+        if (!name || !charClass || !subclass || !race) {
+          messageDiv.innerHTML = '<div class="message error">Заполните все поля!</div>';
+          return;
+        }
+
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+
+        if (currentCharacterId) {
+          const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+          character.name = name;
+          character.class = charClass;
+          character.subclass = subclass;
+          character.race = race;
+        } else {
+          const newChar = {
+            id: 'char_' + Date.now(),
+            name: name,
+            class: charClass,
+            subclass: subclass,
+            race: race,
+            gold: 100,
+            level: 1,
+            inventory: [],
+            adventures: [],
+            completedAdventures: []
+          };
+          users[currentUser].characters.push(newChar);
+          currentCharacterId = newChar.id;
+        }
+
+        localStorage.setItem('users', JSON.stringify(users));
+        messageDiv.innerHTML = '<div class="message success">✅ Персонаж сохранён!</div>';
+
+        setTimeout(() => {
+          showCharacterSelect(currentUser);
+          currentCharacterId = null;
+        }, 1000);
+      }
+
+      function openDashboard() {
+        document.getElementById('authScreen').classList.remove('show');
+        document.getElementById('characterSelectScreen').classList.remove('show');
+        document.getElementById('characterFormScreen').classList.remove('show');
+        document.getElementById('adminScreen').classList.remove('show');
+        
+        document.getElementById('dashboardScreen').classList.add('show');
+
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+
+        document.getElementById('dashCharName').textContent = character.name;
+        document.getElementById('dashCharClass').textContent = character.class;
+        document.getElementById('dashCharSubclass').textContent = character.subclass;
+        document.getElementById('dashCharRace').textContent = character.race;
+        document.getElementById('dashCharGold').textContent = character.gold;
+        document.getElementById('dashCharLevel').textContent = character.level;
+
+        showCompletedAdventures(character);
+        showInventory();
+        showPlayerAdventures();
+      }
+
+      function showCompletedAdventures(character) {
+        const adventures = JSON.parse(localStorage.getItem('adventures')) || {};
+        const completedList = document.getElementById('completedAdventuresList');
+        
+        if (!character.completedAdventures || character.completedAdventures.length === 0) {
+          completedList.innerHTML = '';
+          return;
+        }
+
+        let html = '<h5>✅ Сыгранные приключения:</h5><ul>';
+        character.completedAdventures.forEach(advId => {
+          const adv = adventures[advId];
+          if (adv) {
+            html += `<li>${adv.name}</li>`;
+          }
+        });
+        html += '</ul>';
+        completedList.innerHTML = html;
+      }
+
+      function backToCharacterSelect() {
+        const currentUser = localStorage.getItem('currentUser');
+        currentCharacterId = null;
+        document.getElementById('characterFormScreen').classList.remove('show');
+        document.getElementById('adminScreen').classList.remove('show');
+        document.getElementById('dashboardScreen').classList.remove('show');
+        showCharacterSelect(currentUser);
+      }
+
+      // ============ ФУНКЦИИ ИНВЕНТАРЯ ============
+      function addItem() {
+        const itemName = document.getElementById('itemName').value;
+        const itemDescription = document.getElementById('itemDescription').value;
+        const itemRarity = document.getElementById('itemRarity').value;
+        const messageDiv = document.getElementById('addItemMessage');
+
+        if (!itemName) {
+          messageDiv.innerHTML = '<div class="message error">Заполните название предмета!</div>';
+          return;
+        }
+
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+
+        const existingItem = character.inventory.find(item => item.name.toLowerCase() === itemName.toLowerCase());
+
+        if (existingItem) {
+          messageDiv.innerHTML = '<div class="message error">❌ Такой предмет уже в инвентаре!</div>';
+          return;
+        }
+
+        character.inventory.push({
+          id: Date.now(),
+          name: itemName,
+          description: itemDescription,
+          rarity: itemRarity
+        });
+
+        localStorage.setItem('users', JSON.stringify(users));
+        messageDiv.innerHTML = '<div class="message success">✅ Предмет добавлен!</div>';
+
+        document.getElementById('itemName').value = '';
+        document.getElementById('itemDescription').value = '';
+        document.getElementById('itemRarity').value = 'none';
+
+        showInventory();
+      }
+
+      function getRarityLabel(rarity) {
+        const labels = {
+          'none': 'Нет редкости',
+          'common': 'Обычный',
+          'uncommon': 'Необычный',
+          'rare': 'Редкий',
+          'veryrare': 'Очень редкий',
+          'legendary': 'Легендарный',
+          'artifact': 'Артефакт'
+        };
+        return labels[rarity] || rarity;
+      }
+
+      function showInventory() {
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+        const inventory = character.inventory || [];
+        const inventoryList = document.getElementById('inventoryList');
+
+        if (inventory.length === 0) {
+          inventoryList.innerHTML = '<div class="empty-message">Инвентарь пуст</div>';
+          return;
+        }
+
+        let html = '<div class="inventory-grid">';
+
+        inventory.forEach(item => {
+          html += `
+            <div class="inventory-item">
+              <h3>${item.name}</h3>
+              ${item.description ? `<p><strong>Описание:</strong> ${item.description}</p>` : ''}
+              <span class="rarity-badge rarity-${item.rarity}">${getRarityLabel(item.rarity)}</span>
+              <div class="item-actions">
+                <button onclick="deleteItem(${item.id})">🗑️ Удалить</button>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        inventoryList.innerHTML = html;
+      }
+
+      function deleteItem(itemId) {
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+        character.inventory = character.inventory.filter(i => i.id !== itemId);
+
+        localStorage.setItem('users', JSON.stringify(users));
+        showInventory();
+      }
+
+      function editCharacter() {
+        document.getElementById('dashboardScreen').classList.remove('show');
+        showCharacterForm();
+      }
+
+      function deleteCharacter() {
+        if (!confirm('Вы уверены? Персонаж будет удалён!')) return;
+
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        users[currentUser].characters = users[currentUser].characters.filter(c => c.id !== currentCharacterId);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        currentCharacterId = null;
+        showCharacterSelect(currentUser);
+      }
+
+      // ============ ПРИКЛЮЧЕНИЯ ДЛЯ ИГРОКА ============
+      function showPlayerAdventures() {
+        const adventures = JSON.parse(localStorage.getItem('adventures')) || {};
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+
+        let html = '';
+
+        const activeAdventures = Object.keys(adventures).filter(advId => 
+          !adventures[advId].completed && !adventures[advId].archived
+        );
+
+        if (activeAdventures.length === 0) {
+          html = '<div class="empty-message">Нет доступных приключений</div>';
+        } else {
+          html = '<div class="inventory-grid">';
+
+          activeAdventures.forEach(advId => {
+            const adv = adventures[advId];
+            const isRegistered = character.adventures && character.adventures.includes(advId);
+
+            let registeredCount = 0;
+            Object.keys(users).forEach(username => {
+              const user = users[username];
+              if (user.characters) {
+                user.characters.forEach(char => {
+                  if (char.adventures && char.adventures.includes(advId)) {
+                    registeredCount++;
+                  }
+                });
+              }
+            });
+
+            const maxPlayers = adv.maxPlayers || null;
+            const isFull = maxPlayers && registeredCount >= maxPlayers;
+
+            let slotsInfo = '';
+            if (maxPlayers) {
+              slotsInfo = `<div class="slots-info ${isFull ? 'slots-full' : ''}">
+                Мест: ${registeredCount}/${maxPlayers}
+              </div>`;
+            }
+
+            let dateInfo = '';
+            if (adv.date) {
+              const date = new Date(adv.date);
+              dateInfo = `<div class="date-badge">📅 ${date.toLocaleString('ru-RU')}</div>`;
+            }
+
+            html += `
+              <div class="inventory-item">
+                <h3>${adv.name}</h3>
+                <p>${adv.description}</p>
+                <p><strong>Награда:</strong> ${adv.reward}</p>
+                ${dateInfo}
+                ${slotsInfo}
+                <div class="item-actions">
+                  ${isRegistered ? 
+                    `<button onclick="unregisterFromAdventure('${advId}')" style="background-color: #dc3545;">❌ Отписаться</button>` :
+                    (isFull ? 
+                      `<button disabled>❌ Мест нет</button>` :
+                      `<button onclick="registerForAdventure('${advId}')">✅ Записаться</button>`
+                    )
+                  }
+                </div>
+              </div>
+            `;
+          });
+
+          html += '</div>';
+        }
+
+        document.getElementById('playerAdventuresList').innerHTML = html;
+      }
+
+      function registerForAdventure(advId) {
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        const adv = adventures[advId];
+
+        if (!character.adventures) {
+          character.adventures = [];
+        }
+
+        if (adv.maxPlayers) {
+          let registeredCount = 0;
+          Object.keys(users).forEach(username => {
+            const user = users[username];
+            if (user.characters) {
+              user.characters.forEach(char => {
+                if (char.adventures && char.adventures.includes(advId)) {
+                  registeredCount++;
+                }
+              });
+            }
+          });
+
+          if (registeredCount >= adv.maxPlayers) {
+            alert('❌ Все места заняты!');
+            return;
+          }
+        }
+
+        if (!character.adventures.includes(advId)) {
+          character.adventures.push(advId);
+          localStorage.setItem('users', JSON.stringify(users));
+          showPlayerAdventures();
+        }
+      }
+
+      function unregisterFromAdventure(advId) {
+        const currentUser = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[currentUser].characters.find(c => c.id === currentCharacterId);
+
+        if (character.adventures) {
+          character.adventures = character.adventures.filter(id => id !== advId);
+          localStorage.setItem('users', JSON.stringify(users));
+          showPlayerAdventures();
+        }
+      }
+
+      // ============ АДМИН ПАНЕЛЬ ============
+      function checkAdmin() {
+        const currentUser = localStorage.getItem('currentUser');
+        
+        if (currentUser === 'admin') {
+          openAdminPanel();
+        } else {
+          alert('❌ У вас нет доступа к админ-панели');
+        }
+      }
+
+      function openAdminPanel() {
+        document.getElementById('authScreen').classList.remove('show');
+        document.getElementById('characterSelectScreen').classList.remove('show');
+        document.getElementById('dashboardScreen').classList.remove('show');
+        document.getElementById('characterFormScreen').classList.remove('show');
+        
+        document.getElementById('adminScreen').classList.add('show');
+
+        showAdminUsers();
+        showAdminAdventures();
+        showCompletedAdventuresAdmin();
+        showArchivedAdventuresAdmin();
+      }
+
+      function switchAdminTab(tabName) {
+        document.querySelectorAll('#adminScreen .tab-content').forEach(tab => {
+          tab.classList.remove('show');
+        });
+
+        document.querySelectorAll('#adminScreen .tab-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        document.getElementById(tabName).classList.add('show');
+        event.target.classList.add('active');
+      }
+
+      // ============ ПОИСК ПОЛЬЗОВАТЕЛЕЙ ============
+      function searchUsers() {
+        const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+        const usersList = document.getElementById('usersList');
+
+        let html = '<table class="admin-table"><tr><th>Пользователь</th><th>Персонаж</th><th>Класс</th><th>Золото</th><th>Уровень</th><th>Артефакты</th><th>Сыграно</th><th>Действия</th></tr>';
+
+        Object.keys(users).forEach(username => {
+          const user = users[username];
+          const characters = user.characters || [];
+
+          characters.forEach(character => {
+            // Фильтруем по имени персонажа
+            if (searchTerm && !character.name.toLowerCase().includes(searchTerm)) {
+              return;
+            }
+
+            const artifacts = (character.inventory || []).filter(i => i.rarity === 'artifact').map(i => i.name).join(', ') || '-';
+            const completedCount = (character.completedAdventures || []).length;
+
+            html += `<tr>
+              <td><strong>${username}</strong></td>
+              <td>${character.name}</td>
+              <td>${character.class}</td>
+              <td>${character.gold}</td>
+              <td>${character.level}</td>
+              <td>${artifacts}</td>
+              <td>${completedCount}</td>
+              <td><button onclick="editUserCharacterModal('${username}', '${character.id}')">✏️</button></td>
+            </tr>`;
+          });
+        });
+
+        html += '</table>';
+        usersList.innerHTML = html;
+      }
+
+      function showAdminUsers() {
+        document.getElementById('userSearch').value = '';
+        searchUsers();
+      }
+
+      function editUserCharacterModal(username, charId) {
+        const users = JSON.parse(localStorage.getItem('users'));
+        const user = users[username];
+        const character = user.characters.find(c => c.id === charId);
+
+        let html = `
+          <div class="edit-field">
+            <p><strong>Логин:</strong> ${username}</p>
+            <p><strong>Персонаж: ${character.name}</strong></p>
+            
+            <label>Золото:</label>
+            <input type="number" id="editGold" value="${character.gold}">
+            
+            <label>Уровень:</label>
+            <input type="number" id="editLevel" value="${character.level}">
+            
+            <h4>Инвентарь:</h4>
+            <div id="editInventory"></div>
+            
+            <button onclick="updateUserCharacter('${username}', '${charId}')">💾 Сохранить</button>
+            <button onclick="deleteUserCharacter('${username}', '${charId}')">🗑️ Удалить персонажа</button>
+          </div>
+        `;
+
+        document.getElementById('editUserContent').innerHTML = html;
+
+        let inventoryHtml = '';
+        const inventory = character.inventory || [];
+        if (inventory.length === 0) {
+          inventoryHtml = '<p>Инвентарь пуст</p>';
+        } else {
+          inventory.forEach(item => {
+            inventoryHtml += `
+              <div style="background-color: #1a1a1a; padding: 10px; margin: 5px 0; border-radius: 5px;">
+                <p><strong>${item.name}</strong> (${getRarityLabel(item.rarity)})</p>
+                ${item.description ? `<p>${item.description}</p>` : ''}
+                <button onclick="removeItemFromUserInventory('${username}', '${charId}', ${item.id})">🗑️ Удалить</button>
+              </div>
+            `;
+          });
+        }
+        document.getElementById('editInventory').innerHTML = inventoryHtml;
+
+        document.getElementById('editUserModal').classList.add('show');
+      }
+
+      function updateUserCharacter(username, charId) {
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[username].characters.find(c => c.id === charId);
+
+        character.gold = parseInt(document.getElementById('editGold').value);
+        character.level = parseInt(document.getElementById('editLevel').value);
+
+        localStorage.setItem('users', JSON.stringify(users));
+        closeEditUserModal();
+        showAdminUsers();
+      }
+
+      function removeItemFromUserInventory(username, charId, itemId) {
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[username].characters.find(c => c.id === charId);
+
+        if (character.inventory) {
+          character.inventory = character.inventory.filter(i => i.id !== itemId);
+          localStorage.setItem('users', JSON.stringify(users));
+          editUserCharacterModal(username, charId);
+          showAdminUsers();
+        }
+      }
+
+      function deleteUserCharacter(username, charId) {
+        if (!confirm('Удалить персонажа?')) return;
+
+        const users = JSON.parse(localStorage.getItem('users'));
+        users[username].characters = users[username].characters.filter(c => c.id !== charId);
+        localStorage.setItem('users', JSON.stringify(users));
+        closeEditUserModal();
+        showAdminUsers();
+      }
+
+      function closeEditUserModal() {
+        document.getElementById('editUserModal').classList.remove('show');
+      }
+
+      // ============ ПРИКЛЮЧЕНИЯ (АДМИН) ============
+      function createAdventure() {
+        const name = document.getElementById('advName').value;
+        const description = document.getElementById('advDescription').value;
+        const reward = document.getElementById('advReward').value;
+        const maxPlayers = document.getElementById('advMaxPlayers').value;
+        const date = document.getElementById('advDate').value;
+        const messageDiv = document.getElementById('createAdvMessage');
+
+        if (!name || !description) {
+          messageDiv.innerHTML = '<div class="message error">Заполните название и описание!</div>';
+          return;
+        }
+
+        const adventures = JSON.parse(localStorage.getItem('adventures')) || {};
+        const advId = 'adv_' + Date.now();
+
+        adventures[advId] = {
+          id: advId,
+          name: name,
+          description: description,
+          reward: reward || 'Не указано',
+          maxPlayers: maxPlayers ? parseInt(maxPlayers) : null,
+          date: date || null,
+          completed: false,
+          archived: false
+        };
+
+        localStorage.setItem('adventures', JSON.stringify(adventures));
+        messageDiv.innerHTML = '<div class="message success">✅ Приключение создано!</div>';
+
+        document.getElementById('advName').value = '';
+        document.getElementById('advDescription').value = '';
+        document.getElementById('advReward').value = '';
+        document.getElementById('advMaxPlayers').value = '';
+        document.getElementById('advDate').value = '';
+
+        showAdminAdventures();
+      }
+
+      function showAdminAdventures() {
+        const adventures = JSON.parse(localStorage.getItem('adventures')) || {};
+        const adventuresList = document.getElementById('adventuresList');
+
+        const activeAdventures = Object.keys(adventures).filter(advId => 
+          !adventures[advId].completed && !adventures[advId].archived
+        );
+
+        if (activeAdventures.length === 0) {
+          adventuresList.innerHTML = '<div class="empty-message">Нет активных приключений</div>';
+          return;
+        }
+
+        let html = '<div class="admin-grid">';
+
+        activeAdventures.forEach(advId => {
+          const adv = adventures[advId];
+          const users = JSON.parse(localStorage.getItem('users')) || {};
+          let registeredCount = 0;
+
+          Object.keys(users).forEach(username => {
+            const user = users[username];
+            if (user.characters) {
+              user.characters.forEach(char => {
+                if (char.adventures && char.adventures.includes(advId)) {
+                  registeredCount++;
+                }
+              });
+            }
+          });
+
+          const maxInfo = adv.maxPlayers ? `${registeredCount}/${adv.maxPlayers}` : registeredCount;
+
+          let dateInfo = '';
+          if (adv.date) {
+            const date = new Date(adv.date);
+            dateInfo = `<p><strong>📅 Дата:</strong> ${date.toLocaleString('ru-RU')}</p>`;
+          }
+
+          html += `
+            <div class="admin-card">
+              <h3>${adv.name}</h3>
+              <p>${adv.description}</p>
+              <p><strong>Награда:</strong> ${adv.reward}</p>
+              ${dateInfo}
+              <p><strong>Записано игроков:</strong> ${maxInfo}</p>
+              <div class="actions">
+                <button onclick="showAdventureRegistrations('${advId}')">👥</button>
+                <button onclick="editAdventureModal('${advId}')">✏️</button>
+                <button onclick="completeAdventure('${advId}')" style="background-color: #28a745;">✅</button>
+                <button onclick="archiveAdventure('${advId}')" style="background-color: #6c757d;">📦</button>
+                <button onclick="deleteAdventure('${advId}')">🗑️</button>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        adventuresList.innerHTML = html;
+      }
+
+      function showCompletedAdventuresAdmin() {
+        const adventures = JSON.parse(localStorage.getItem('adventures')) || {};
+        const completedList = document.getElementById('completedAdventuresList');
+
+        const completedAdventures = Object.keys(adventures).filter(advId => 
+          adventures[advId].completed && !adventures[advId].archived
+        );
+
+        if (completedAdventures.length === 0) {
+          completedList.innerHTML = '<div class="empty-message">Нет сыгранных приключений</div>';
+          return;
+        }
+
+        let html = '<div class="admin-grid">';
+
+        completedAdventures.forEach(advId => {
+          const adv = adventures[advId];
+
+          let dateInfo = '';
+          if (adv.date) {
+            const date = new Date(adv.date);
+            dateInfo = `<p><strong>📅 Дата:</strong> ${date.toLocaleString('ru-RU')}</p>`;
+          }
+
+          html += `
+            <div class="admin-card">
+              <h3>${adv.name} <span class="completed-badge">✅ Сыграно</span></h3>
+              <p>${adv.description}</p>
+              <p><strong>Награда:</strong> ${adv.reward}</p>
+              ${dateInfo}
+              <div class="actions">
+                <button onclick="showAdventureRegistrations('${advId}')">👥 Участники</button>
+                <button onclick="archiveAdventure('${advId}')" style="background-color: #6c757d;">📦 Архивировать</button>
+                <button onclick="deleteAdventure('${advId}')">🗑️ Удалить</button>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        completedList.innerHTML = html;
+      }
+
+      function showArchivedAdventuresAdmin() {
+        const adventures = JSON.parse(localStorage.getItem('adventures')) || {};
+        const archivedList = document.getElementById('archivedAdventuresList');
+
+        const archivedAdventures = Object.keys(adventures).filter(advId => 
+          adventures[advId].archived
+        );
+
+        if (archivedAdventures.length === 0) {
+          archivedList.innerHTML = '<div class="empty-message">Архив пуст</div>';
+          return;
+        }
+
+        let html = '<div class="admin-grid">';
+
+        archivedAdventures.forEach(advId => {
+          const adv = adventures[advId];
+
+          let dateInfo = '';
+          if (adv.date) {
+            const date = new Date(adv.date);
+            dateInfo = `<p><strong>📅 Дата:</strong> ${date.toLocaleString('ru-RU')}</p>`;
+          }
+
+          const statusBadge = adv.completed ? '<span class="completed-badge">✅ Сыграно</span>' : '';
+
+          html += `
+            <div class="admin-card">
+              <h3>${adv.name} <span class="archived-badge">📦 Архив</span> ${statusBadge}</h3>
+              <p>${adv.description}</p>
+              <p><strong>Награда:</strong> ${adv.reward}</p>
+              ${dateInfo}
+              <div class="actions">
+                <button onclick="unarchiveAdventure('${advId}')" style="background-color: #28a745;">↩️ Разархивировать</button>
+                <button onclick="deleteAdventure('${advId}')">🗑️ Удалить</button>
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        archivedList.innerHTML = html;
+      }
+
+      function editAdventureModal(advId) {
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        const adv = adventures[advId];
+
+        let html = `
+          <div class="edit-field">
+            <label>Название:</label>
+            <input type="text" id="editAdvName" value="${adv.name}">
+            
+            <label>Описание:</label>
+            <textarea id="editAdvDescription">${adv.description}</textarea>
+            
+            <label>Награда:</label>
+            <input type="text" id="editAdvReward" value="${adv.reward}">
+            
+            <label>Макс. участников:</label>
+            <input type="number" id="editAdvMaxPlayers" value="${adv.maxPlayers || ''}" placeholder="Без лимита">
+            
+            <label>Дата проведения:</label>
+            <input type="datetime-local" id="editAdvDate" value="${adv.date || ''}">
+            
+            <button onclick="updateAdventure('${advId}')">💾 Сохранить</button>
+          </div>
+        `;
+
+        document.getElementById('editAdventureContent').innerHTML = html;
+        document.getElementById('editAdventureModal').classList.add('show');
+      }
+
+      function updateAdventure(advId) {
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        const adv = adventures[advId];
+
+        adv.name = document.getElementById('editAdvName').value;
+        adv.description = document.getElementById('editAdvDescription').value;
+        adv.reward = document.getElementById('editAdvReward').value;
+        adv.maxPlayers = document.getElementById('editAdvMaxPlayers').value ? parseInt(document.getElementById('editAdvMaxPlayers').value) : null;
+        adv.date = document.getElementById('editAdvDate').value || null;
+
+        localStorage.setItem('adventures', JSON.stringify(adventures));
+        closeEditAdventureModal();
+        showAdminAdventures();
+        showCompletedAdventuresAdmin();
+        showArchivedAdventuresAdmin();
+      }
+
+      function closeEditAdventureModal() {
+        document.getElementById('editAdventureModal').classList.remove('show');
+      }
+
+      function showAdventureRegistrations(advId) {
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        const users = JSON.parse(localStorage.getItem('users'));
+        const adventure = adventures[advId];
+
+        let html = `<h3>Записи на: ${adventure.name}</h3>`;
+        let registeredChars = [];
+
+        Object.keys(users).forEach(username => {
+          const user = users[username];
+          if (user.characters) {
+            user.characters.forEach(char => {
+              if (char.adventures && char.adventures.includes(advId)) {
+                registeredChars.push({
+                  username: username,
+                  character: char
+                });
+              }
+              // Добавляем тех, кто уже сыграл
+              if (char.completedAdventures && char.completedAdventures.includes(advId)) {
+                registeredChars.push({
+                  username: username,
+                  character: char,
+                  completed: true
+                });
+              }
+            });
+          }
+        });
+
+        if (registeredChars.length === 0) {
+          html += '<p>Никто не записался</p>';
+        } else {
+          html += '<table class="admin-table"><tr><th>Игрок</th><th>Персонаж</th><th>Класс</th><th>Уровень</th><th>Золото</th><th>Действия</th></tr>';
+
+          registeredChars.forEach(entry => {
+            const statusBadge = entry.completed ? '<span class="completed-badge">✅</span>' : '';
+            html += `<tr>
+              <td>${entry.username}</td>
+              <td>${entry.character.name} ${statusBadge}</td>
+              <td>${entry.character.class}</td>
+              <td>${entry.character.level}</td>
+              <td>${entry.character.gold}</td>
+              <td>
+                ${!entry.completed ? 
+                  `<button onclick="unregisterPlayerFromAdventure('${entry.username}', '${entry.character.id}', '${advId}')" style="background-color: #dc3545;">❌</button>` 
+                  : '-'}
+              </td>
+            </tr>`;
+          });
+
+          html += '</table>';
+        }
+
+        document.getElementById('adventureRegistrationsContent').innerHTML = html;
+        document.getElementById('adventureRegistrationsModal').classList.add('show');
+      }
+
+      function unregisterPlayerFromAdventure(username, charId, advId) {
+        const users = JSON.parse(localStorage.getItem('users'));
+        const character = users[username].characters.find(c => c.id === charId);
+        
+        if (character.adventures) {
+          character.adventures = character.adventures.filter(id => id !== advId);
+          localStorage.setItem('users', JSON.stringify(users));
+          showAdventureRegistrations(advId);
+        }
+      }
+
+      function completeAdventure(advId) {
+        if (!confirm('Отметить приключение как сыгранное? Оно переместится в раздел "Сыгранные".')) return;
+
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        const users = JSON.parse(localStorage.getItem('users'));
+        
+        adventures[advId].completed = true;
+
+        Object.keys(users).forEach(username => {
+          const user = users[username];
+          if (user.characters) {
+            user.characters.forEach(char => {
+              if (char.adventures && char.adventures.includes(advId)) {
+                if (!char.completedAdventures) {
+                  char.completedAdventures = [];
+                }
+                if (!char.completedAdventures.includes(advId)) {
+                  char.completedAdventures.push(advId);
+                }
+                char.adventures = char.adventures.filter(id => id !== advId);
+              }
+            });
+          }
+        });
+
+        localStorage.setItem('adventures', JSON.stringify(adventures));
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        showAdminAdventures();
+        showCompletedAdventuresAdmin();
+      }
+
+      function archiveAdventure(advId) {
+        if (!confirm('Архивировать приключение?')) return;
+
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        adventures[advId].archived = true;
+
+        localStorage.setItem('adventures', JSON.stringify(adventures));
+        
+        showAdminAdventures();
+        showCompletedAdventuresAdmin();
+        showArchivedAdventuresAdmin();
+      }
+
+      function unarchiveAdventure(advId) {
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        adventures[advId].archived = false;
+
+        localStorage.setItem('adventures', JSON.stringify(adventures));
+        
+        showAdminAdventures();
+        showCompletedAdventuresAdmin();
+        showArchivedAdventuresAdmin();
+      }
+
+      function closeAdventureRegistrationsModal() {
+        document.getElementById('adventureRegistrationsModal').classList.remove('show');
+      }
+
+      function deleteAdventure(advId) {
+        if (!confirm('Удалить приключение?')) return;
+
+        const adventures = JSON.parse(localStorage.getItem('adventures'));
+        delete adventures[advId];
+        localStorage.setItem('adventures', JSON.stringify(adventures));
+        
+        showAdminAdventures();
+        showCompletedAdventuresAdmin();
+        showArchivedAdventuresAdmin();
+      }
+
+      // ============ ВКЛАДКИ ============
+      function switchTab(tabName) {
+        document.querySelectorAll('#dashboardScreen .tab-content').forEach(tab => {
+          tab.classList.remove('show');
+        });
+
+        document.querySelectorAll('#dashboardScreen .tab-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        document.getElementById(tabName).classList.add('show');
+        event.target.classList.add('active');
+      }
+
+      function logout() {
+        localStorage.removeItem('currentUser');
+        currentCharacterId = null;
+        
+        document.getElementById('characterSelectScreen').classList.remove('show');
+        document.getElementById('characterFormScreen').classList.remove('show');
+        document.getElementById('dashboardScreen').classList.remove('show');
+        document.getElementById('adminScreen').classList.remove('show');
+        
+        document.getElementById('authScreen').classList.add('show');
+        
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerPassword').value = '';
+      }
+
+      window.onload = function() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+          const users = JSON.parse(localStorage.getItem('users'));
+          if (users[currentUser]) {
+            showCharacterSelect(currentUser);
+          }
+        }
+      }
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseUrl = "sb_secret_HxxD48D1IQZdlxFhxP3BsA_tYgmWAkH";
+  const supabaseKey = "sb_publishable_EHpl6tSXFFkR_R4giSwKNw_3sItjW-Q";
+
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+</script>
+  </body>
+</html>
